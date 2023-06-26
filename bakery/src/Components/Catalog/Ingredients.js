@@ -7,8 +7,10 @@ const URL_Units = 'units';
 
 const Ingredients = () =>{
 	const [ingredients, setIngredients] =useState([]);
+	const [ingredientsFiltered, setIngredientsFiltered] =useState([]);
 	const [units, setUnits] =useState([]);
-	const [currentItem, setCurrentItem] = useState({id:'', name:'', unit_id:1})
+	const [currentItem, setCurrentItem] = useState({id:'', name:'', unit_id:1});
+	const [searchStr, setSearchStr] = useState('');
 
 	const getRequest = (URL, toDo) => {
 		fetch(URL)
@@ -21,6 +23,11 @@ const Ingredients = () =>{
 		getRequest(URL+URL_Ingredients, setIngredients);
 		getRequest (URL+URL_Units, setUnits )	
 	}, []);
+
+	useEffect (() =>{
+			setIngredientsFiltered (ingredients.filter((value) => 
+									searchStr ? value.name.toLowerCase().indexOf( searchStr.toLowerCase() ) !== -1 : true))
+	}, [ingredients, searchStr])	
 
 // ----------------------------------------------
 // Data validation before saving
@@ -129,6 +136,7 @@ const Ingredients = () =>{
 		setCurrentItem ({id:item.id, name : item.name, unit_id : item.unit_id})
 	}
 
+	console.log('ingredientsFiltered =>', ingredientsFiltered);
 
 	return (
 	<div className='container'>
@@ -137,9 +145,8 @@ const Ingredients = () =>{
 			<div className='row justify-content-md-center'>
 				<div className='col-6'>
 					<form action="">
-						<input type="text" />
-						<button>Search</button>
-						<button>Clear</button>
+						<input type="text" value={searchStr} onChange={(e) => setSearchStr(e.target.value)} placeholder='Enter to filter'/>
+						<button onClick={(e) => { e.preventDefault(); setSearchStr('') }} >Clear</button>
 					</form>
 				</div>
 			</div>
@@ -155,7 +162,7 @@ const Ingredients = () =>{
 								</tr>
 							</thead>
 							<tbody>
-								{ingredients.map((value,i) => <GetIngredient item={value} editButton = {pushEditButton} i={i} />)}
+								{ingredientsFiltered.map((value,i) => <GetIngredient item={value} editButton = {pushEditButton} i={i} />)}
 							</tbody>
 						</table>
 					</div>
