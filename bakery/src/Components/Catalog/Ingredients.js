@@ -131,31 +131,47 @@ const Ingredients = () =>{
 
 
 	return (
-	<div>
-		<div className='scroll_div'>
-			<h1>Hello</h1>
-			<div>Current item id {currentItem.id} item name {currentItem.name} and unit_id{currentItem.unit_id}</div>
-			<table>
-				<thead>
-					<tr>
-						<td>Name</td>
-						<td>Unit</td>
-						<td>Short unit</td>
-					</tr>
-				</thead>
-				<tbody>
-					{ingredients.map((value) => <GetIngredient item={value} editButton = {pushEditButton} />)}
-				</tbody>
-			</table>
-		</div>
+	<div className='container'>
+		<h3 className=''>Catalog | Ingredients</h3	>
+		<div className='container '>
+			<div className='row justify-content-md-center'>
+				<div className='col-6'>
+					<form action="">
+						<input type="text" />
+						<button>Search</button>
+						<button>Clear</button>
+					</form>
+				</div>
+			</div>
+			<div className='row justify-content-md-center'>
+				<div className=' col-8 mt-3 p-3' >
+					<div className='scroll_div'>
+						<table class='table'>
+							<thead>
+								<tr>
+									<td>Name</td>
+									<td>Unit</td>
+									<td>Short unit</td>
+								</tr>
+							</thead>
+							<tbody>
+								{ingredients.map((value,i) => <GetIngredient item={value} editButton = {pushEditButton} i={i} />)}
+							</tbody>
+						</table>
+					</div>
+				</div>
+			</div>
 		<div>
-			{currentItem.name ?
-				<UpdateForm item = {currentItem} units={units} updateIngredient={updateIngredient} cancelUpdate={cancelUpdate} />
-				:
-				<AddForm item = {currentItem} addIngredients={addIngredients} units={units} />
-			}
-		
-
+		</div >
+			<div className='row justify-content-md-center'>
+				<div className='form-box col-6 mt-3 p-3'>
+					{currentItem.name ?
+						<UpdateForm item = {currentItem} units={units} updateIngredient={updateIngredient} cancelUpdate={cancelUpdate} />
+						:
+						<AddForm item = {currentItem} addIngredients={addIngredients} units={units} />
+					}
+				</div>
+			</div>
 		</div>
 	</div>
 	)
@@ -164,7 +180,7 @@ const Ingredients = () =>{
 
 const GetIngredient = (props) => {
 	return(
-		<tr>
+		<tr key={props.i}>
 			<td>{props.item.name}</td>
 			<td>{props.item.unit_name}</td>
 			<td>{props.item.unit_short_name}</td>
@@ -184,9 +200,6 @@ const AddForm = (props) => {
 			unit_id:props.item.unit_id})	
 	},[props.item])																								
 		
-	console.log('Add Form props.item', props.item);
-	console.log('Add Form currentItem', currentItem);
-
 	return (
 		<>
 			<div>Add new ingredient:</div>
@@ -198,7 +211,7 @@ const AddForm = (props) => {
 				<select onChange={(e) => setCurrentItem ({...currentItem, unit_id:e.target.value}) }
 							name='iUnit' value = {currentItem.unit_id} >
 					{props.units.map ((item) =>
-						<option value={item.id}>{item.unit_name}</option>
+						<option key={item.id} value={item.id}>{item.unit_name}</option>
 					)}
 				</select>
 				<button type='submit'>Add</button>
@@ -219,7 +232,7 @@ const UpdateForm = (props) => {
 	return (
 	<>
 		<div>`Edit ingredient: {props.item.name}` </div>
-		<form action="">
+		<form action="" className='form'>
 			<label htmlFor="iName">Ingredient:</label>
 			<input onChange={(e) => setCurrentItem ({...currentItem, name:e.target.value}) }
 							type="text" name='iName'  value = {currentItem.name}/>
@@ -227,7 +240,7 @@ const UpdateForm = (props) => {
 			<select onChange={(e) => setCurrentItem ({...currentItem, unit_id:e.target.value}) }
 							name='iUnit' value = {currentItem.unit_id} >
 				{props.units.map ((item) =>
-					<option value={item.id}>{item.unit_name}</option>
+					<option key={item.id} value={item.id}>{item.unit_name}</option>
 				)}
 			</select>
 			<button onClick={(e) => {
