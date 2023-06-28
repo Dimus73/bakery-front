@@ -1,17 +1,26 @@
 import logo from './logo.svg';
 import './App.css';
+import {Routes, Route, Link} from 'react-router-dom'
 import Ingredients from './Components/Catalog/Ingredients';
-import TopBar from './Components/Menu/TopBar';
+import Equipment from './Components/Catalog/Equipment';
+import {Layout} from './Components/Layout/Layout'
+import { PageNoFound } from './Components/PageNoFound';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 
 function App() {
   return (
-  <div className='container'>
-    <TopBar />
-    <Ingredients />
-  </div>
+  <>
+    {/* <Ingredients /> */}
+    <Routes>
+      <Route path='/' element={<Layout />}>
+        <Route path='catalog/ingredients' element={<Ingredients />} />
+        <Route path='catalog/equipment' element={<Equipment />} />
+        <Route path='*' element={<PageNoFound />} />
+      </Route>
+    </Routes>
+  </>
 );
 }
 

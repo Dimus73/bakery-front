@@ -4,14 +4,13 @@ import './Ingredients.css';
 import { Button, Modal } from 'react-bootstrap'
 
 const URL = 'http://127.0.0.1:3040/api/catalog/';
-const URL_Ingredients = 'ingredients';
-const URL_Units = 'units';
+const URL_Equipment = 'equipment';
 
-const Ingredients = () =>{
-	const [ingredients, setIngredients] =useState([]);
-	const [ingredientsFiltered, setIngredientsFiltered] =useState([]);
-	const [units, setUnits] =useState([]);
-	const [currentItem, setCurrentItem] = useState({id:'', name:'', unit_id:1});
+
+const Equipment = () =>{
+	const [equipments, setEquipments] =useState([]);
+	const [equipmentsFiltered, setEquipmentsFiltered] =useState([]);
+	const [currentItem, setCurrentItem] = useState({id:'', name:'', quantity:''});
 	const [searchStr, setSearchStr] = useState('');
 
 	const [showModal, setShowModal] = useState(false);
@@ -28,26 +27,25 @@ const Ingredients = () =>{
 
 	
 	useEffect(()=>{
-		getRequest(URL+URL_Ingredients, setIngredients);
-		getRequest (URL+URL_Units, setUnits )	
+		getRequest(URL+URL_Equipment, setEquipments);
 	}, []);
 
 	useEffect (() =>{
-			setIngredientsFiltered (ingredients.filter((value) => 
-									searchStr ? value.name.toLowerCase().indexOf( searchStr.toLowerCase() ) !== -1 : true))
-	}, [ingredients, searchStr])	
+			setEquipmentsFiltered (equipments.filter((value) => 
+									searchStr ? value.equipment.toLowerCase().indexOf( searchStr.toLowerCase() ) !== -1 : true))
+	}, [equipments, searchStr])	
 
 // ----------------------------------------------
 // Data validation before saving
 // ----------------------------------------------
-	const dataValidation = (name, unit_id) => {
+	const dataValidation = (name, quantity) => {
 		if (!FieldCheck(name)) {
 			alert ("The field contains an invalid word. Please don't use words: ['SELECT', 'INSERT', 'DELETE', 'UPDATE']")
 		} else if (!name){
 			alert ("The Ingredient field cannot be empty")
-		} else if (unit_id == 1){
-			alert ("Choose a unit of measure")
-		}  else {
+		} else if (!quantity){
+			alert ("The Quantity field cannot be empty")
+		} else {
 			return true;
 		}		
 		return false;
@@ -57,7 +55,7 @@ const Ingredients = () =>{
 // Name validation before saving
 // ----------------------------------------------
 	const nameAddValidation = (name) => {
-		if ( ingredients.some ((value) => (value.name.toLowerCase() == name.toLowerCase())) ){
+		if ( equipments.some ((value) => (value.equipment.toLowerCase() === name.toLowerCase())) ){
 			alert ("This ingredient is already in the database. Duplicate ingredients are not allowed.")
 		} else {
 			return true;
@@ -69,7 +67,7 @@ const Ingredients = () =>{
 // Name validation before update
 // ----------------------------------------------
 const nameUpdateValidation = (id, name) => {
-		if ( ingredients.some ((value) => (value.name.toLowerCase() == name.toLowerCase() && value.id != id)) ){
+		if ( equipments.some ((value) => (value.equipment.toLowerCase() === name.toLowerCase() && value.id !== id)) ){
 			alert ("This ingredient is already in the database. Duplicate ingredients are not allowed.")
 		} else {
 			return true;
@@ -80,14 +78,14 @@ const nameUpdateValidation = (id, name) => {
 // ----------------------------------------------
 // Function for adding an ingredient
 // ----------------------------------------------
-	const addIngredients = (e) =>{
+	const addEquipment = (e) =>{
 		e.preventDefault();
 
-		const name = e.target.elements.iName.value;
-		const unit_id = e.target.elements.iUnit.value;
-
+		const equipment = e.target.elements.equipment.value;
+		const quantity = e.target.elements.quantity.value;
+		console.log('From Add =>', equipment, quantity);
 //Checking data for validity.
-		if (dataValidation (name, unit_id) && nameAddValidation (name) ) {
+		if (dataValidation (equipment, quantity) && nameAddValidation (equipment) ) {
 // Sending data to the server
 			const reqData = {
 				method: "POST",
@@ -95,17 +93,17 @@ const nameUpdateValidation = (id, name) => {
 					'Content-type':'application/json'
 				},
 				body:JSON.stringify({
-					name,
-					unit_id
+					equipment,
+					quantity
 				})
 			}
 
-			setCurrentItem ({id:'', name:'', unit_id:1});
+			setCurrentItem ({id:'', equipment:'', quantity:'', active:false});
 
-			fetch (URL+URL_Ingredients, reqData)
+			fetch (URL+URL_Equipment, reqData)
 			.then (data=> data.json())
 			.then (data => {
-				setIngredients(data)})
+				setEquipments(data)})
 			.catch(err => {
 				alert ('There was a communication error with the server while saving data. Check server operation and try again.')
 				console.log("ERROR when saving data", err)
@@ -116,8 +114,9 @@ const nameUpdateValidation = (id, name) => {
 // ----------------------------------------------
 // Function for updating an ingredient
 // ----------------------------------------------
-	const updateIngredient = (item) => {
-		if ( dataValidation(item.name, item.unit_id) && nameUpdateValidation(item.id, item.name) ){
+	const updateEquipment = (item) => {
+		console.log('Update function =>', item);
+		if ( dataValidation(item.equipment, item.quantity) && nameUpdateValidation(item.id, item.equipment) ){
 			const reqData = {
 				method : 'PUT',
 				headers : {
@@ -125,17 +124,17 @@ const nameUpdateValidation = (id, name) => {
 				},
 				body : JSON.stringify ({
 					id : item.id,
-					name : item.name,
-					unit_id : item.unit_id,
+					equipment : item.equipment,
+					quantity : item.quantity,
 					active : item.active
 				})
 			}
 
-			setCurrentItem ({id:'', name:'', unit_id:1});
+			setCurrentItem ({id:'', equipment:'', quantity:'', active:false});
 
-			fetch (URL+URL_Ingredients, reqData)
+			fetch (URL+URL_Equipment, reqData)
 			.then (data => data.json())
-			.then (data => setIngredients(data)) 
+			.then (data => setEquipments(data)) 
 			.catch((err) => {
 				alert ('There was a communication error with the server while saving data. Check server operation and try again.')
 				console.log('getRequest ERROR:', err);
@@ -147,21 +146,16 @@ const nameUpdateValidation = (id, name) => {
 
 	}
 // ----------------------------------------------
-// Function for Cancel update an ingredient
+// Function for Cancel update an equipment
 // ----------------------------------------------
 	const cancelUpdate = () => {
-		setCurrentItem ({id:'', name : '', unit_id : ''})
+		setCurrentItem ({id:'', equipment:'', quantity:0});
 	}
 // ----------------------------------------------
 // Push Edit button (update an ingredient)
 // ----------------------------------------------
 	const pushEditButton = (item) => {
-		setCurrentItem ({
-			id:item.id, 
-			name : item.name, 
-			unit_id : item.unit_id,
-			active : item.active
-		})
+		setCurrentItem ({id : item.id, equipment : item.equipment, quantity : item.quantity, active : item.active})
 	}
 
 	// console.log('ingredientsFiltered =>', ingredientsFiltered);
@@ -171,14 +165,14 @@ const nameUpdateValidation = (id, name) => {
   };
 
   const handleShowModal = (e) => {
-		e.preventDefault()
+		e.preventDefault();
     setShowModal(true);
   };
 
 
 	return (
 	<div className='container'>
-		<h3 className=''>Catalog | Ingredients</h3	>
+		<h3 className=''>Catalog | Equipment</h3	>
 		<div className='container '>
 			<div className='row justify-content-md-center'>
 				<div className='col-6'>
@@ -195,15 +189,14 @@ const nameUpdateValidation = (id, name) => {
 						<table className='table table-primary'>
 							<thead>
 								<tr>
-									<td>Name</td>
-									<td>Unit</td>
-									<td>Short unit</td>
+									<td>Equipment</td>
+									<td>Quantity</td>
 									<td></td>
 									<td></td>
 								</tr>
 							</thead>
 							<tbody>
-								{ingredientsFiltered.map((value,i) => <GetIngredient item={value} editButton = {pushEditButton} i={i} updateIngredient = {updateIngredient}/>)}
+								{equipmentsFiltered.map((value,i) => <GetEquipment item={value} editButton = {pushEditButton} i={i} updateIngredient = {updateEquipment}/>)}
 							</tbody>
 						</table>
 					</div>
@@ -213,10 +206,10 @@ const nameUpdateValidation = (id, name) => {
 		</div >
 			<div className='row justify-content-md-center'>
 				<div className='form-box col-6 mt-3 p-3'>
-					{currentItem.name ?
-						<UpdateForm item = {currentItem} units={units} updateIngredient={updateIngredient} cancelUpdate={cancelUpdate} />
+					{currentItem.equipment ?
+						<UpdateForm item = {currentItem} updateEquipment={updateEquipment} cancelUpdate={cancelUpdate} />
 						:
-						<AddForm item = {currentItem} addIngredients={addIngredients} units={units} />
+						<AddForm item = {currentItem} addEquipment={addEquipment} />
 					}
 				</div>
 			</div>
@@ -241,12 +234,11 @@ const nameUpdateValidation = (id, name) => {
 }
 
 
-const GetIngredient = (props) => {
+const GetEquipment = (props) => {
 	return(
 		<tr key={props.i}>
-			<td>{props.item.name}</td>
-			<td>{props.item.unit_name}</td>
-			<td>{props.item.unit_short_name}</td>
+			<td>{props.item.equipment}</td>
+			<td>{props.item.quantity}</td>
 			<td><button onClick={() => props.editButton (props.item)}>Edit</button></td>
 			<td><button onClick={() => props.updateIngredient ({...props.item, active:false}) }>Deactivate</button></td>
 		</tr>
@@ -259,24 +251,20 @@ const AddForm = (props) => {
 
 	useEffect (()=>{
 		setCurrentItem({id:props.item.id, 
-			name:props.item.name, 
-			unit_id:props.item.unit_id})	
+			equipment:props.item.equipment, 
+			quantity:props.item.quantity})	
 	},[props.item])	
 		
 	return (
 		<>
-			<div>Add new ingredient:</div>
-			<form onSubmit={props.addIngredients} action="">
-				<label htmlFor="iName">Ingredient:</label>
-				<input onChange={(e) => setCurrentItem ({...currentItem, name:e.target.value}) }
-							type="text" name='iName'  value = {currentItem.name}/>
-				<label htmlFor="iUnit">Unit:</label>
-				<select onChange={(e) => setCurrentItem ({...currentItem, unit_id:e.target.value}) }
-							name='iUnit' value = {currentItem.unit_id} >
-					{props.units.map ((item) =>
-						<option key={item.id} value={item.id}>{item.unit_name}</option>
-					)}
-				</select>
+			<div>Add new equipment:</div>
+			<form onSubmit={props.addEquipment} action="">
+				<label htmlFor="equipment">Equipment:</label>
+				<input onChange={(e) => setCurrentItem ({...currentItem, equipment:e.target.value}) }
+							type="text" name='equipment'  value = {currentItem.equipment}/>
+				<label htmlFor="quantity">Quantity:</label>
+				<input onChange={(e) => setCurrentItem ({...currentItem, quantity:e.target.value}) }
+							name='quantity' value = {currentItem.quantity} />
 				<button type='submit'>Add</button>
 			</form>
 		</>
@@ -289,29 +277,25 @@ const UpdateForm = (props) => {
 	useEffect (()=>{
 		setCurrentItem({
 			id : props.item.id, 
-			name : props.item.name, 
-			unit_id : props.item.unit_id,
+			equipment : props.item.equipment, 
+			quantity : props.item.quantity,
 			active : props.item.active
 		})	
 	},[props.item])																								
 
 	return (
 	<>
-		<div>`Edit ingredient: {props.item.name}` </div>
+		<div>`Edit equipment: {props.item.equipment}` </div>
 		<form action="" className='form'>
-			<label htmlFor="iName">Ingredient:</label>
-			<input onChange={(e) => setCurrentItem ({...currentItem, name:e.target.value}) }
-							type="text" name='iName'  value = {currentItem.name}/>
-			<label htmlFor="iUnit">Unit:</label>
-			<select onChange={(e) => setCurrentItem ({...currentItem, unit_id:e.target.value}) }
-							name='iUnit' value = {currentItem.unit_id} >
-				{props.units.map ((item) =>
-					<option key={item.id} value={item.id}>{item.unit_name}</option>
-				)}
-			</select>
+			<label htmlFor="equipment">Ingredient:</label>
+			<input onChange={(e) => setCurrentItem ({...currentItem, equipment:e.target.value}) }
+							type="text" name='equipment'  value = {currentItem.equipment}/>
+			<label htmlFor="quantity">Unit:</label>
+			<input onChange={(e) => setCurrentItem ({...currentItem, quantity:e.target.value}) }
+							name='quantity' value = {currentItem.quantity} />
 			<button onClick={(e) => {
 				e.preventDefault();
-				props.updateIngredient(currentItem);} }>Update</button> 
+				props.updateEquipment(currentItem);} }>Update</button> 
 			<button onClick={(e) => {
 				e.preventDefault();
 				props.cancelUpdate ();}}>Cancel</button> 
@@ -321,6 +305,5 @@ const UpdateForm = (props) => {
 }
 
 
-	// {/* If the editing mode is then use the "Update" and "Stop" buttons, if the adding mode is the "Add" button */}
 
-	export default Ingredients
+	export default Equipment
