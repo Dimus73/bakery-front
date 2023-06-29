@@ -6,6 +6,7 @@ import Equipment       from './Components/Catalog/Equipment';
 import { Layout }      from './Components/Layout/Layout'
 import { PageNoFound } from './Components/PageNoFound';
 import Login           from './Components/Auth/Login';
+import Registry        from './Components/Auth/Registry';
 import HomePage        from './Components/Homepage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
@@ -19,6 +20,7 @@ function App() {
       <Route path='/' element={<Layout />}>
         <Route index element={<HomePage />} />
         <Route path='login' element={<Login />} />
+        <Route path='registry' element={<Registry />} />
         <Route path='catalog/ingredients' element={<Ingredients />} />
         <Route path='catalog/equipment' element={<Equipment />} />
         <Route path='*' element={<PageNoFound />} />

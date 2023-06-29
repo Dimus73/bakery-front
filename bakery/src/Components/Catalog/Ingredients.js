@@ -1,4 +1,5 @@
 import { useState, useEffect} from 'react'
+import { useSelector } from 'react-redux'
 import { FieldCheck } from '../../Utils/Fieldcheck';
 import './Ingredients.css';
 import { Button, Modal } from 'react-bootstrap'
@@ -16,10 +17,28 @@ const Ingredients = () =>{
 
 	const [showModal, setShowModal] = useState(false);
 
+	const user = useSelector (state => state.user);
+
 	const getRequest = (URL, toDo) => {
-		fetch(URL)
-		.then(data => data.json())
-		.then(data => toDo(data))
+		const reqData = {
+			method: "GET",
+			headers:{
+				'Content-type' : 'application/json',
+				'Authorization' : 'Bearer ' + user.token
+			},
+		}
+
+		fetch(URL, reqData)
+		.then(data =>  {
+			// console.log('From Get:', data);
+			if (!data.ok) {
+				throw new Error (`Error getting data. Status ${data.status}. Message `)
+			}
+			return data.json()
+		})
+		.then(data => {
+			toDo(data)
+		})
 		.catch((err) => {
 			alert ('There was a communication error with the server while reading data. Check server operation and try again.')
 			console.log('getRequest ERROR:', err);
@@ -92,7 +111,8 @@ const nameUpdateValidation = (id, name) => {
 			const reqData = {
 				method: "POST",
 				headers:{
-					'Content-type':'application/json'
+					'Content-type':'application/json',
+					'Authorization' : 'Bearer ' + user.token,
 				},
 				body:JSON.stringify({
 					name,
@@ -121,7 +141,8 @@ const nameUpdateValidation = (id, name) => {
 			const reqData = {
 				method : 'PUT',
 				headers : {
-					'Content-type':'application/json'
+					'Content-type':'application/json',
+					'Authorization' : 'Bearer ' + user.token,
 				},
 				body : JSON.stringify ({
 					id : item.id,

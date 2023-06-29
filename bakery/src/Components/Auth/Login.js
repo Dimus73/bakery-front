@@ -30,7 +30,7 @@ const Login = () => {
 			const data = await fetch(URL, reqData); 
 			const result = await data.json()
 
-			localStorage.setItem( 'user', JSON.stringify (result)  );
+			localStorage.setItem( 'user', JSON.stringify (result) );
 			dispatch(setUser(result));
 			console.log('In login function', result);
 			navigate( '/' );

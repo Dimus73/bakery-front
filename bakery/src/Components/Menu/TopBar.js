@@ -1,10 +1,11 @@
 import {Link, useNavigate} from 'react-router-dom'
-import {useDispatch} from 'react-redux'
+import {useDispatch, useSelector} from 'react-redux'
 import { setUser } from '../../redux/action'
 
 const TopBar = () =>{
 	const navigate = useNavigate();
 	const dispatch = useDispatch ();
+	const user = useSelector(state => state.user)
 
 	const logOut = (e) => {
 		const user = { 
@@ -55,6 +56,9 @@ const TopBar = () =>{
 						<li class="ml-auto nav-item">
 							<Link class="nav-link" to="/" onClick={logOut}>Logout</Link>
 						</li>
+						<li class="ml-auto nav-item">
+							<Link class="nav-link" to="/registry" >Registry</Link>
+						</li>
 
 					</ul>
 					<div class="collapse navbar-collapse">
@@ -62,7 +66,7 @@ const TopBar = () =>{
 							<li><Link to='/login'>Login</Link></li>
 						</ul>
 					</div>
-					<div>Login | Registry</div>
+					<div>USER: | {user.username}</div>
 					<form class="d-flex" role="search">
 						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
 						<button class="btn btn-outline-success" type="submit">Search</button>

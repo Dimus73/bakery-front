@@ -3,9 +3,9 @@ export const SET_USER = 'SET_USER'
 let initState = ""
 try {
 	const localStorageData = localStorage.getItem('user');
-	console.log('From reducer localStorageData :', localStorageData);
+	// console.log('From reducer localStorageData :', localStorageData);
 	initState = { user:JSON.parse (localStorageData)}
-	console.log('From reducer after JSON parse :', initState);
+	// console.log('From reducer after JSON parse :', initState);
 	initState = ('username' in initState.user) ? initState : 
 	{
 			user : { id:'',
