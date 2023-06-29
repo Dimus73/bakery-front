@@ -8,6 +8,7 @@ import { PageNoFound } from './Components/PageNoFound';
 import Login           from './Components/Auth/Login';
 import Registry        from './Components/Auth/Registry';
 import HomePage        from './Components/Homepage';
+import Recipe from './Components/Recipe/Recipe';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Row, Col } from 'react-bootstrap';
@@ -18,12 +19,13 @@ function App() {
     {/* <Ingredients /> */}
     <Routes>
       <Route path='/' element={<Layout />}>
-        <Route index element={<HomePage />} />
-        <Route path='login' element={<Login />} />
-        <Route path='registry' element={<Registry />} />
-        <Route path='catalog/ingredients' element={<Ingredients />} />
-        <Route path='catalog/equipment' element={<Equipment />} />
-        <Route path='*' element={<PageNoFound />} />
+        <Route index                        element={<HomePage />} />
+        <Route path='login'                 element={<Login />} />
+        <Route path='registry'              element={<Registry />} />
+        <Route path='catalog/ingredients'   element={<Ingredients />} />
+        <Route path='catalog/equipment'     element={<Equipment />} />
+        <Route path='recipe'                element={<Recipe/>} />
+        <Route path='*'                     element={<PageNoFound />} />
       </Route>
     </Routes>
   </>

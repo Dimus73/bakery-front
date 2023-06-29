@@ -35,6 +35,9 @@ const TopBar = () =>{
 						<li class="nav-item">
 							<Link class="nav-link" to="#">Link</Link>
 						</li>
+						<li class="nav-item">
+							<Link class="nav-link" to="/recipe">Recipes</Link>
+						</li>
 						<li class="nav-item dropdown">
 							<Link class="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
 								Catalogs

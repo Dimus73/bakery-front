@@ -1,0 +1,16 @@
+.input-box, .select-box {
+	background-color: rgba(255,255,255,0.01);
+	border: none;
+	/* text-align: right; */
+}
+
+.select-box{
+	width: 250px;
+}
+.input-box{
+	width: 50px;
+}
+
+.block-ing {
+	border-radius: 10px;
+}
