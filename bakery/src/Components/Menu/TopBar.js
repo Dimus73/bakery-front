@@ -1,6 +1,23 @@
-import {Link} from 'react-router-dom'
+import {Link, useNavigate} from 'react-router-dom'
+import {useDispatch} from 'react-redux'
+import { setUser } from '../../redux/action'
 
 const TopBar = () =>{
+	const navigate = useNavigate();
+	const dispatch = useDispatch ();
+
+	const logOut = (e) => {
+		const user = { 
+			id:'',
+			username:'',
+			roles:[],
+			token:''
+		}
+		dispatch (setUser(user));
+		localStorage.setItem('user', JSON.stringify(user))
+		navigate('/');
+
+	}
 
 	return (
 		<nav class="navbar navbar-expand-lg bg-body-tertiary">
@@ -12,7 +29,7 @@ const TopBar = () =>{
 				<div class="collapse navbar-collapse" id="navbarSupportedContent">
 					<ul class="navbar-nav me-auto mb-2 mb-lg-0">
 						<li class="nav-item">
-							<Link class="nav-link active" to="#">Home</Link>
+							<Link class="nav-link active" to="/">Home</Link>
 						</li>
 						<li class="nav-item">
 							<Link class="nav-link" to="#">Link</Link>
@@ -32,7 +49,20 @@ const TopBar = () =>{
 						<li class="nav-item">
 							<a class="nav-link disabled">Disabled</a>
 						</li>
+						<li class="ml-auto nav-item">
+							<Link class="nav-link" to="/login">Login</Link>
+						</li>
+						<li class="ml-auto nav-item">
+							<Link class="nav-link" to="/" onClick={logOut}>Logout</Link>
+						</li>
+
 					</ul>
+					<div class="collapse navbar-collapse">
+						<ul class="navbar-nav me-auto mb-2 mb-lg-0">
+							<li><Link to='/login'>Login</Link></li>
+						</ul>
+					</div>
+					<div>Login | Registry</div>
 					<form class="d-flex" role="search">
 						<input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
 						<button class="btn btn-outline-success" type="submit">Search</button>

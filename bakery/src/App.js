@@ -1,10 +1,12 @@
 import logo from './logo.svg';
 import './App.css';
 import {Routes, Route, Link} from 'react-router-dom'
-import Ingredients from './Components/Catalog/Ingredients';
-import Equipment from './Components/Catalog/Equipment';
-import {Layout} from './Components/Layout/Layout'
+import Ingredients     from './Components/Catalog/Ingredients';
+import Equipment       from './Components/Catalog/Equipment';
+import { Layout }      from './Components/Layout/Layout'
 import { PageNoFound } from './Components/PageNoFound';
+import Login           from './Components/Auth/Login';
+import HomePage        from './Components/Homepage';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Row, Col } from 'react-bootstrap';
@@ -15,6 +17,8 @@ function App() {
     {/* <Ingredients /> */}
     <Routes>
       <Route path='/' element={<Layout />}>
+        <Route index element={<HomePage />} />
+        <Route path='login' element={<Login />} />
         <Route path='catalog/ingredients' element={<Ingredients />} />
         <Route path='catalog/equipment' element={<Equipment />} />
         <Route path='*' element={<PageNoFound />} />
