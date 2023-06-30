@@ -13,7 +13,10 @@ const Login = () => {
 		const username = e.target.elements.username.value;
 		const password = e.target.elements.password.value;
 		console.log(username, password);
-		const URL = 'http://127.0.0.1:3040/api/auth/login'
+		const BASE_URL = process.env.REACT_APP_BASE_URL
+		const URL = BASE_URL + '/api/auth/registration'
+	
+		
 		try {
 			const reqData = {
 				method : 'POST',
