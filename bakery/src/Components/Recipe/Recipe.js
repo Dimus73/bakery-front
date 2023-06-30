@@ -115,8 +115,9 @@ const Recipe = (props) => {
 					{units.map ((value) => <h4>{value.unit_name}</h4>)}
 				</div>
 				<div className='col-5'>
+					{/* ---------------------------------- */}
 					<div>Ingredient</div>
-						<div className="block-ing table-responsive h-330 bg-success-subtle" style={{border:'1px solid black'}}>
+						<div className="block-ing table-responsive h-330 bg-success-subtle p-3 border border-2 border-dark">
 							<table className="table table-success table-striped table-hover table-sm">
 								<thead>
 									<tr>
@@ -136,12 +137,13 @@ const Recipe = (props) => {
 								</tbody>
 							</table>
 						</div>
-					<button className='btn btn-primary m-1' onClick={()=>{
-							recipe.ingredients.push({});
-							setRecipe ({...recipe});
-							}}>Add row</button>
-					<button onClick={()=>console.log('Recipe',recipe, ingredients)}>Print</button>
-				</div>
+						<button className='btn btn-primary m-1' onClick={()=>{
+								recipe.ingredients.push({});
+								setRecipe ({...recipe});
+								}}>Add row</button>
+						<button onClick={()=>console.log('Recipe',recipe, ingredients)}>Print</button>
+					</div>
+					{/* ---------------------------------- */}
 			</div>
 		</div>
 	)
