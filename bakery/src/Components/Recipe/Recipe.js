@@ -5,24 +5,28 @@ import getAll from '../../Utils/getListFromBase'
 import BlockTable from './RecipeTable'
 
 const Recipe = (props) => {
+
 	const user = useSelector (state => state.user);
+	const emptyRecipe = {
+		name : '',
+		finish_quantity : 1,
+		unit_id : '',
+		semifinished : false,
+		ingredients:[
+			{}
+		],
+		equipments:[
+			{}
+		],
+		description:'',
+		imgURL:'',
+		creator : user.userId
+	}
 
 	const [equipments, setEquipment] = useState([]);
 	const [ingredients, setIngredients] = useState([]);
 	const [units, setUnits] = useState([]);
-	const [recipe, setRecipe] = useState(
-		{
-			name : '',
-			ingredients:[
-				{}
-			],
-			equipments:[
-				{}
-			],
-			description:'',
-			imgURL:''
-		}
-	)
+	const [recipe, setRecipe] = useState( emptyRecipe )
 
 
 	const getAllIngredients = async () => {
@@ -65,19 +69,78 @@ const Recipe = (props) => {
 		getAllUnits();
 	} ,[]);
 
+	// ---------------------------
+	// Checking data before sending it to the server
+	// ---------------------------
 
+	const recipeDataCheck = (data) => {
+		if (!(data.name.trim())) {
+			alert ('Recipe name field cannot be empty');
+			return false
+		}
+		if (isNaN(data.finish_quantity)){
+			alert ('You must specify the amount of output')
+			return false
+		}
+		if (data.unit_id == 1){
+			alert('It is necessary to select units of finished products')
+			return false
+		}
+		if (data.ingredients.some((value) =>  isNaN(value.quantity) || Number(value.quantity) <=0 )){
+			alert ('In the "number of ingredients" field must be a number greater than zero')
+			return false;
+		}
+		if (data.equipments.some((value) =>  isNaN(value.quantity) || Number(value.quantity) <=0 )){
+			alert ('In the "equipment time" field must be a number greater than zero')
+			return false;
+		}
+		return true
+	}
+
+	// ---------------------------
+	// Clearing data before sending it to the server
+	// ---------------------------
+	const clearData = (recipe) => {
+		const data = {...recipe};
+
+		data.ingredients = data.ingredients.filter((value) => 'id' in value)
+		data.equipments = data.equipments.filter((value) => 'id' in value)
+		data.name = data.name.trim();
+
+		return data
+
+	}
+
+
+	// ---------------------------
+	// Function to save data to database
+	// ---------------------------
 	const saveRecipe = async () => {
 		const BASE_URL = process.env.REACT_APP_BASE_URL
 		const URL = BASE_URL + '/api/recipe'
+		// recipe.creator = user.id;
+
+		const data = clearData(recipe);
+
+		if (!recipeDataCheck(data)) { 
+			return
+		}
+
+		console.log('Recipe from FRONT =>', data, user);
 
 		const reqData = {
 			method : 'POST',
 			headers : {
 				'Content-type' : 'application/json'
 			},
-			body : JSON.stringify (recipe)
+			body : JSON.stringify (data)
 		}
 		await fetch (URL, reqData)
+		try {
+			await fetch (URL, reqData)	
+		} catch (error) {
+			console.log(`Error while saving recipe. Message: ${error}`);
+		}
 	}
 
 	// ---------------------------
@@ -90,8 +153,15 @@ const Recipe = (props) => {
 			const newUnits = ingredients.filter((value) => value.id === newValue)[0].unit_short_name
 			recipe.ingredients[i].id = newValue;
 			recipe.ingredients[i].unit_name = newUnits;
+			if ( recipe.ingredients.filter((value) => !('id' in value)) ){
+				recipe.ingredients.push({})
+			}
 		} else {
 			recipe.equipments[i].id = newValue;
+			if ( recipe.equipments.filter((value) => !('id' in value)) ){
+				recipe.equipments.push({})
+			}
+
 		}
 		setRecipe({...recipe}); 
 
@@ -135,15 +205,36 @@ const Recipe = (props) => {
 		<div className='container'>
 			<div className='row'>
 				<div className='col-3'>
+
 					<label htmlFor="recipe_name">Recipe name:</label>
 					<input type="text" name='recipe_name' value={recipe.name}
 						onChange={ (e) => {setRecipe ({...recipe, name:e.target.value})}} />
+
 					<label htmlFor="recipe_img">Recipe img:</label>
 					<input type="text" name='recipe_img' value={recipe.imgURL}
 						onChange={ (e) => {setRecipe ({...recipe, imgURL:e.target.value})}} />
+
 					<div contenteditable="true" 
 						onInput={ (e) => {setRecipe ({...recipe, name:e.target.innerText})} }>Test edit div</div>
+
+					<label htmlFor="finish_quantity">Finish quantity:</label>
+					<input className='w-30' type="text" name='finish_quantity' value={recipe.finish_quantity}
+							onChange={ (e) => {setRecipe ({...recipe, finish_quantity:e.target.value})}} />
+
+					<label htmlFor="iUnit">Unit:</label>
+					<select onChange={(e) => setRecipe ({...recipe, unit_id:e.target.value}) }
+							name='unit' value = {recipe.unit_id} >
+						{units.map ((item) =>
+							<option key={item.id} value={item.id}>{item.unit_name}</option>
+						)}
+					</select>
+					<label htmlFor="is_semifinished">Semifinished</label>
+					<input type="checkbox" name="is_semifinished" value={recipe.semifinished} 
+					  onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.value}) }/>
+
 				</div>
+
+
 				<div className='col-3'>
 					<div>
 						<img src={recipe.imgURL} alt="" className='img-thumbnail img-fluid'/>
