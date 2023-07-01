@@ -4,8 +4,8 @@ import {useState, useEffect} from 'react'
 import getAll from '../../Utils/getListFromBase'
 import BlockTable from './RecipeTable'
 
-
 const Recipe = (props) => {
+
 	const user = useSelector (state => state.user);
 	const emptyRecipe = {
 		name : '',
@@ -23,14 +23,26 @@ const Recipe = (props) => {
 		creator : user.userId
 	}
 
-	const [equipments, setEquipment] = useState([{}]);
-	const [ingredients, setIngredients] = useState([{}]);
-	const [units, setUnits] = useState([{}]);
+	const [equipments, setEquipment] = useState(
+		[{
+			id: '', equipment: '', quantity: '', active: ''
+		}]
+	);
+	const [ingredients, setIngredients] = useState(
+		[{
+			id: '', name: '', unit_id: '', unit_name: '', unit_short_name: ''
+		}]
+	);
+	const [units, setUnits] = useState(
+		[{
+			id: '', unit_name: '', unit_short_name: ''
+		}]
+	);
 	const [recipe, setRecipe] = useState( emptyRecipe )
 
-	// ---------------------------
-	// Get All ingredients for select tub
-	// ---------------------------
+	let i =[];
+	let e =[];
+	let u= [];
 
 	const getAllIngredients = async () => {
 		const URL = '/api/catalog/ingredients'
@@ -40,13 +52,11 @@ const Recipe = (props) => {
 			alert (temp.res)
 			return ;
 		}
-		return temp.res;
+		i=[...temp.res]
+		setIngredients(temp.res);
 		// console.log(temp.res);
 	}
 
-	// ---------------------------
-	// Get All equipment for select tub
-	// ---------------------------
 	const getAllEquipment = async () => {
 		const URL = '/api/catalog/equipment'
 		const temp = await getAll(user.token, URL);
@@ -55,12 +65,10 @@ const Recipe = (props) => {
 			alert (temp.res)
 			return ;
 		}
-		return (temp.res);
+		e=[...temp.res]
+		setEquipment(temp.res);
 	}
 
-	// ---------------------------
-	// Get All units for right display
-	// ---------------------------
 	const getAllUnits = async () => {
 		const URL = '/api/catalog/units'
 		const temp = await getAll(user.token, URL);
@@ -69,66 +77,38 @@ const Recipe = (props) => {
 			alert (temp.res)
 			return ;
 		}
-		return(temp.res);
+		u=[...temp.res]
+		setUnits(temp.res);
 	}
-
-	// ---------------------------
-	// Get recipe detail in case of Edit
-	// ---------------------------
-
-	const getRecipeDetail = async (id) => {
-		const BASE_URL = process.env.REACT_APP_BASE_URL;
-		const URL = BASE_URL + '/api/recipe/'+id;
-
-		const reqData = {
-			method : 'GET',
-			headers:{
-				'Content-type' : 'application/json',
-				'Authorization' : 'Bearer ' + user.token
-			},
-		}
-		try {
-			const data = await fetch(URL, reqData);
-			const dataJS = await data.json();
-			// console.log(data, dataJS);
-			if (data.ok) {
-				// console.log('Getting recipe data in recipe detail', dataJS);
-				// setRecipeDetail ({...dataJS});
-				// a=a+1;
-				// b={...dataJS}
-				dataJS.ingredients.push({})
-				dataJS.equipments.push({})
-				return dataJS
-			} else {
-				alert(`Error getting recipes detail. Status: ${data.status}. Message: ${dataJS.msg}`)
-			}
-		} catch (error) {
-			console.log(error);
-			alert (`Error getting recipes detail. Message: ${error}`)
-		}
-
-	}
-
 
 	useEffect( () => {
 		const tt = async () => {
-			const v_ingredients = await getAllIngredients();
-			const v_equipments  = await getAllEquipment();
-			const v_units       = await getAllUnits();
-			setEquipment(v_equipments);
-			setIngredients(v_ingredients);
-			setUnits(v_units);
-			// console.log('IF FLAG', props.recipe);
-			if (props.flag === 'edit') {
-				const res = await getRecipeDetail(props.id);
-				console.log('Flags:', props, res);
-				setRecipe({...res})
-				
-			}
+			await getAllIngredients();
+			await getAllEquipment();
+			await getAllUnits();
+			console.log('After async:', units, equipments, ingredients);
+			console.log('After async ppppp:', u, e, i);
+			// if ('flag' in props && units.length>1 && equipments.length > 1 && ingredients.length > 1) {
+			// 	setRecipe( props.recipe )
+			// }
+			setRecipe( props.recipe )
 		}
 	 	tt()
 	} ,[]);
 	
+
+	// useEffect( () => {
+	// 	const tt = async () => {
+	// 		await getAllIngredients();
+	// 		await getAllEquipment();
+	// 		await getAllUnits();
+	// 		if ('flag' in props) {
+	// 			setRecipe( props.recipe )
+	// 		}
+	// 	}
+	//  	tt()
+	// } ,[]);
+
 
 	// ---------------------------
 	// Checking data before sending it to the server
@@ -187,7 +167,7 @@ const Recipe = (props) => {
 			return
 		}
 
-		// console.log('Recipe from FRONT to SAVE=>', data, user);
+		console.log('Recipe from FRONT =>', data, user);
 
 		const reqData = {
 			method : 'POST',
@@ -207,46 +187,6 @@ const Recipe = (props) => {
 	}
 
 	// ---------------------------
-	// Function to update existing recipe in database
-	// ---------------------------
-	const updateRecipe = async () => {
-		const BASE_URL = process.env.REACT_APP_BASE_URL
-		const URL = BASE_URL + '/api/recipe'
-
-		const data = clearData(recipe);
-
-		if (!recipeDataCheck(data)){
-			return
-		}
-
-		console.log('Recipe from FRONT to SAVE=>', data, user);
-
-		const reqData = {
-			method : 'PUT',
-			headers : {
-				'Content-type' : 'application/json',
-				'Authorization' : 'Bearer ' + user.token 
-			},
-			body : JSON.stringify (data)
-		}
-		try {
-			const res = await fetch (URL, reqData);
-			const resJS = await res.json()
-			if ( res.ok ) {
-				alert ('Recipe update successful ')
-			} else {
-				console.log(`Error in updating. Status:${res.status}. Message: ${resJS}`);
-				alert (`Error in updating. Status:${res.status}. Message: ${resJS}`)
-			}	
-		} catch (error) {
-			console.log(`Error while UPDATING recipe. Message: ${error}`);
-			alert (`Error while UPDATING recipe. Message: ${error}`)
-		}
-
-
-	}
-
-	// ---------------------------
 	// Callback function for changing the ingredient. It also changes the unit of measure.
 	// ---------------------------
 	const changeIngredient = ( e, i, flag ) => { 
@@ -254,20 +194,16 @@ const Recipe = (props) => {
 		const newValue = Number( e.target.value );
 		if (flag === 'I') {
 			const newUnits = ingredients.filter((value) => value.id === newValue)[0].unit_short_name
-			recipe.ingredients[i].id = 0;
-			recipe.ingredients[i].ingredient_id = newValue;
+			recipe.ingredients[i].id = newValue;
 			recipe.ingredients[i].unit_name = newUnits;
-			if ( recipe.ingredients.every((value) => ('ingredient_id' in value)) ){
+			if ( recipe.ingredients.filter((value) => !('id' in value)) ){
 				recipe.ingredients.push({})
 			}
-			// console.log(recipe.ingredients);
 		} else {
-			recipe.equipments[i].id = 0;
-			recipe.equipments[i].equipment_id = newValue;
-			if ( recipe.equipments.every((value) => ('equipment_id' in value)) ){
+			recipe.equipments[i].id = newValue;
+			if ( recipe.equipments.filter((value) => !('id' in value)) ){
 				recipe.equipments.push({})
 			}
-			// console.log(recipe.equipments);
 
 		}
 		setRecipe({...recipe}); 
@@ -321,8 +257,8 @@ const Recipe = (props) => {
 					<input type="text" name='recipe_img' value={recipe.imgURL}
 						onChange={ (e) => {setRecipe ({...recipe, imgURL:e.target.value})}} />
 
-					{/* <div contentEditable="true" 
-						onInput={ (e) => {setRecipe ({...recipe, name:e.target.innerText})} }>Test edit div</div> */}
+					<div contenteditable="true" 
+						onInput={ (e) => {setRecipe ({...recipe, name:e.target.innerText})} }>Test edit div</div>
 
 					<label htmlFor="finish_quantity">Finish quantity:</label>
 					<input className='w-30' type="text" name='finish_quantity' value={recipe.finish_quantity}
@@ -336,14 +272,9 @@ const Recipe = (props) => {
 						)}
 					</select>
 					<label htmlFor="is_semifinished">Semifinished</label>
-					{recipe.semifinished ?
-					<input type="checkbox" name="is_semifinished" checked 
-					  onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.checked})}/>
-					:
-					<input type="checkbox" name="is_semifinished"  
-					onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.checked})}/>
+					<input type="checkbox" name="is_semifinished" value={recipe.semifinished} 
+					  onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.value}) }/>
 
-					}
 				</div>
 
 
@@ -382,12 +313,7 @@ const Recipe = (props) => {
 					/>
 					{/* ---------------------------------- */}
 				</div>
-				<div className='row'>
-					<div className='col-6'>
-						<button onClick={saveRecipe} className='btn btn-primary m-1'>Save recipe</button>
-						<button onClick={updateRecipe} className='btn btn-primary m-1'>Update recipe</button>
-					</div>
-				</div>
+				<button onClick={saveRecipe} className=' '>Save recipe</button>
 			</div>
 		</div>
 	)

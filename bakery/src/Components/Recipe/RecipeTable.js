@@ -1,4 +1,5 @@
 const BlockTable = (props) => {
+	// console.log('BlockTable props', props);
 	return(
 		<div className="container h-330" >
 			<div className="block-ing table-responsive h-330 bg-success-subtle p-3 border border-2 border-dark" style={{height:'330px'}}>
@@ -38,11 +39,14 @@ const IngredientRow = (props) => {
 		<tr>
 			<td className='align-middle' >{props.i+1}</td>
 			<td className='align-middle'>
-				<select className="select-box text-start" name="ingredient" id="" value={props.value.id} 
-				  onChange={(e) => props.changeIngredient(e, props.i, props.flag)}
-					>
+				<select className="select-box text-start" name="ingredient" id="" value={props.flag === 'I' ? props.value.ingredient_id : props.value.equipment_id} 
+				  onChange={(e) => props.changeIngredient(e, props.i, props.flag)}>
 					<option disabled selected value=""></option>
-					{props.ingredients.map ((value) => <option value={value.id}>{props.flag === 'I' ? value.name : value.equipment}</option>)}
+					{props.ingredients.map ((value) => {
+					// console.log('Options', value.id, props );
+					return  (<option  value={value.id}> {props.flag === 'I' ? value.name : value.equipment} </option> )
+					}
+						)}
 				</select>
 			</td>
 			<td className='align-middle text-end' >
@@ -55,7 +59,7 @@ const IngredientRow = (props) => {
 				{props.value.unit_name}
 			</td> : " "}
 			<td className='align-middle text-center' >
-				<i class="bi bi-x-square" style={{'font-size': '1.3rem', color: 'cornflowerblue'}}
+				<i className="bi bi-x-square" style={{'font-size': '1.3rem', color: 'cornflowerblue'}}
 					onClick={(e) => {props.deleteIngredient (e, props.i, props.flag) }}></i>
 			</td>
 		</tr>

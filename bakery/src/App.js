@@ -11,7 +11,7 @@ import HomePage        from './Components/Homepage';
 
 import RecipeList      from './Components/Recipe/RecipeList';
 import Recipe          from './Components/Recipe/Recipe';
-import RecipeDetail    from './Components/Recipe/RecipeDetail';
+import RecipeEdit    from './Components/Recipe/RecipeEdit';
 
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Row, Col } from 'react-bootstrap';
@@ -30,7 +30,7 @@ function App() {
         <Route path='catalog/equipment'     element={<Equipment />} />
 
         <Route path='recipe/list'           element={<RecipeList/>} />
-        <Route path='recipe/:id'            element={<RecipeDetail/>} />
+        <Route path='recipe/:id'            element={<RecipeEdit/>} />
         <Route path='recipe/create'         element={<Recipe/>} />
 
         <Route path='*'                     element={<PageNoFound />} />
