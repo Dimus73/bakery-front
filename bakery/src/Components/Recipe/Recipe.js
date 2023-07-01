@@ -64,6 +64,9 @@ const Recipe = (props) => {
 	}
 
 	useEffect( () => {
+		if ('flag' in props) {
+			setRecipe( props.recipe )
+		}
 		getAllIngredients();
 		getAllEquipment();
 		getAllUnits();
@@ -131,15 +134,17 @@ const Recipe = (props) => {
 		const reqData = {
 			method : 'POST',
 			headers : {
-				'Content-type' : 'application/json'
+				'Content-type' : 'application/json',
+				'Authorization' : 'Bearer ' + user.token 
 			},
 			body : JSON.stringify (data)
 		}
-		await fetch (URL, reqData)
+		// await fetch (URL, reqData)
 		try {
 			await fetch (URL, reqData)	
 		} catch (error) {
 			console.log(`Error while saving recipe. Message: ${error}`);
+			alert (`Error while saving recipe. Message: ${error}`)
 		}
 	}
 

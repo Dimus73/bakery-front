@@ -14,7 +14,7 @@ const Login = () => {
 		const password = e.target.elements.password.value;
 		console.log(username, password);
 		const BASE_URL = process.env.REACT_APP_BASE_URL
-		const URL = BASE_URL + '/api/auth/registration'
+		const URL = BASE_URL + '/api/auth/login'
 	
 		
 		try {
