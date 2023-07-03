@@ -20,6 +20,7 @@ const Recipe = (props) => {
 		],
 		description:'',
 		imgURL:'',
+		img:'',
 		creator : user.userId
 	}
 
@@ -90,14 +91,10 @@ const Recipe = (props) => {
 		try {
 			const data = await fetch(URL, reqData);
 			const dataJS = await data.json();
-			// console.log(data, dataJS);
 			if (data.ok) {
-				// console.log('Getting recipe data in recipe detail', dataJS);
-				// setRecipeDetail ({...dataJS});
-				// a=a+1;
-				// b={...dataJS}
 				dataJS.ingredients.push({})
 				dataJS.equipments.push({})
+
 				return dataJS
 			} else {
 				alert(`Error getting recipes detail. Status: ${data.status}. Message: ${dataJS.msg}`)
@@ -187,7 +184,7 @@ const Recipe = (props) => {
 			return
 		}
 
-		// console.log('Recipe from FRONT to SAVE=>', data, user);
+		 console.log('Recipe from FRONT to SAVE=>', data, user);
 
 		const reqData = {
 			method : 'POST',
@@ -260,7 +257,7 @@ const Recipe = (props) => {
 			if ( recipe.ingredients.every((value) => ('ingredient_id' in value)) ){
 				recipe.ingredients.push({})
 			}
-			// console.log(recipe.ingredients);
+			console.log('recipe.ingredients:',recipe.ingredients);
 		} else {
 			recipe.equipments[i].id = 0;
 			recipe.equipments[i].equipment_id = newValue;
@@ -318,8 +315,8 @@ const Recipe = (props) => {
 						onChange={ (e) => {setRecipe ({...recipe, name:e.target.value})}} />
 
 					<label htmlFor="recipe_img">Recipe img:</label>
-					<input type="text" name='recipe_img' value={recipe.imgURL}
-						onChange={ (e) => {setRecipe ({...recipe, imgURL:e.target.value})}} />
+					<input type="text" name='recipe_img' value={recipe.img}
+						onChange={ (e) => {setRecipe ({...recipe, img:e.target.value})}} />
 
 					{/* <div contentEditable="true" 
 						onInput={ (e) => {setRecipe ({...recipe, name:e.target.innerText})} }>Test edit div</div> */}
@@ -349,7 +346,7 @@ const Recipe = (props) => {
 
 				<div className='col-3'>
 					<div>
-						<img src={recipe.imgURL} alt="" className='img-thumbnail img-fluid'/>
+						<img src={recipe.img} alt="" className='img-thumbnail img-fluid'/>
 					</div>
 				</div>
 				<div className='col-6'>
@@ -400,6 +397,7 @@ export default Recipe
 // https://irecommend.ru/sites/default/files/product-images/1398415/YE2pZJEJ71Mm5dtv3LWPg.jpg
 // https://sun9-41.userapi.com/MI4rjKbAP9M05tzE4GXjGLq9d0wd2_agznLc2w/1pbkJLtMnbU.jpg
 // http://klublady.ru/uploads/posts/2022-02/1645019230_14-klublady-ru-p-tort-zakher-foto-15.jpg
+// https://balthazar.club/uploads/posts/2022-03/thumbs/1646148994_30-balthazar-club-p-morozhenoe-ptiche-moloko-31.jpg
 // Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eos quos in fugiat, voluptas tempore, maiores libero doloribus ad minima quaerat tenetur excepturi blanditiis hic odio esse a mollitia necessitatibus quo.
 
 // {

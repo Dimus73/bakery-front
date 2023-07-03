@@ -1,14 +1,23 @@
-import {Link, Outlet} from 'react-router-dom'
+import { Outlet} from 'react-router-dom'
 import TopBar from '../Menu/TopBar'
+import Footer from '../Footer/Footer'
 
 const Layout = () => {
 
 	return (
-		<>
-			<TopBar />
-			<Outlet />
-			<footer>---=====Footer=====----- 2023</footer>
-		</>
+		<div className='container'>
+			<div className='row'>
+				<TopBar />
+			</div>
+			<div className='row'>
+				<div className="container" style={{marginTop:"150px"}}>
+					<div className='row'>
+						<Outlet />
+					</div>
+				</div>
+			</div>
+			<Footer />
+		</div>
 	)
 }
 

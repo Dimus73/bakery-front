@@ -5,6 +5,9 @@ body {
     sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
+  background-image: url(../public/img/BG_pattern.svg);
+  /* background-size: 50% 50%;
+  background-repeat: repeat;  */
 }
 
 code {

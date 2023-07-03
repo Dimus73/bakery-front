@@ -40,7 +40,7 @@ const IngredientRow = (props) => {
 			<td className='align-middle' >{props.i+1}</td>
 			<td className='align-middle'>
 				<select className="select-box text-start" name="ingredient" id="" value={props.flag === 'I' ? props.value.ingredient_id : props.value.equipment_id} 
-				  onChange={(e) => props.changeIngredient(e, props.i, props.flag)}>
+				  placeholder="Enter" onChange={(e) => props.changeIngredient(e, props.i, props.flag)}>
 					<option disabled selected value=""></option>
 					{props.ingredients.map ((value) => {
 					// console.log('Options', value.id, props );
@@ -51,7 +51,7 @@ const IngredientRow = (props) => {
 			</td>
 			<td className='align-middle text-end' >
 				<input className="input-box text-right" type="text" value = {props.value.quantity} 
-				  onChange={ (e) => { props.changeIngredientQuantity(e, props.i, props.flag) } }
+				  placeholder="Enter" onChange={ (e) => { props.changeIngredientQuantity(e, props.i, props.flag) } }
 				/>
 			</td>
 			{props.flag === 'I' ?

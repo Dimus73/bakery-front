@@ -2,6 +2,7 @@ import {Link, useNavigate} from 'react-router-dom'
 import {useDispatch, useSelector} from 'react-redux'
 import { setUser } from '../../redux/action'
 
+// import d from '../../../public/img/logo.gpeg'
 const TopBar = () =>{
 	const navigate = useNavigate();
 	const dispatch = useDispatch ();
@@ -21,71 +22,68 @@ const TopBar = () =>{
 	}
 
 	return (
-		<nav className="navbar navbar-expand-lg bg-body-tertiary">
-			<div className="container-fluid">
-				<a className="navbar-brand" to="#">Navbar</a>
-				<button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
-					<span className="navbar-toggler-icon"></span>
-				</button>
-				<div className="collapse navbar-collapse" id="navbarSupportedContent">
-					<ul className="navbar-nav me-auto mb-2 mb-lg-0">
-						<li className="nav-item">
-							<Link className="nav-link active" to="/">Home</Link>
-						</li>
-						<li className="nav-item">
-							<Link className="nav-link" to="#">Link</Link>
-						</li>
+		<>
+			<div className="container-flued bg-white shadow fixed-top">
+				<header className="d-flex flex-wrap align-items-center justify-content-center justify-content-md-between py-1 mb-1 ">
+					<div className="col-md-3 mb-2 mb-md-0 text-center">
+						<a href="/" className="d-inline-flex link-body-emphasis text-decoration-none">
+							<img src="/img/logo.jpeg" alt="ffff"  width="80" height="60" />
+							<svg className="bi" width="40" height="32" role="img" aria-label="Bootstrap">
+							</svg>
+						</a>
+					</div>
+
+					<ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+						<li><Link to="/" className="nav-link px-2 link-secondary">Home</Link></li>
+						<li><Link to="#" className="nav-link px-2">Features</Link></li>
 
 						<li className='nav-item dropdown'>
-							<Link className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" to="#" > 
-								Recipe
-							</Link>
-							<ul className="dropdown-menu">
-								<li><Link className="dropdown-item" to="/recipe/list" >List</Link></li>
-								<li><Link className="dropdown-item" to="/recipe/create" >Create</Link></li>
-							</ul>
+								<Link className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" to="#" >
+									Recipe
+								</Link>
+								<ul className="dropdown-menu">
+									<li><Link className="dropdown-item" to="/recipe/list" >List</Link></li>
+									<li><Link className="dropdown-item" to="/recipe/create" >Create</Link></li>
+								</ul>
 						</li>
 
+						
 						<li className="nav-item dropdown">
-							<Link className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-								Catalogs
-							</Link>
-							<ul className="dropdown-menu">
-							<li><Link className="dropdown-item" to="/catalog/ingredients">Ingredient</Link></li>
-							<li><Link className="dropdown-item" to="/catalog/equipment">Equipment</Link></li>
-								<li><Link className="dropdown-item" to="#">Another action</Link></li>
-								<li><hr className="dropdown-divider" /></li>
-								<li><Link className="dropdown-item" to="#">Something else here</Link></li>
-							</ul>
-						</li>
+								<Link className="nav-link dropdown-toggle" to="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+									Catalogs
+								</Link>
+								<ul className="dropdown-menu">
+								<li><Link className="dropdown-item" to="/catalog/ingredients">Ingredient</Link></li>
+								<li><Link className="dropdown-item" to="/catalog/equipment">Equipment</Link></li>
+									<li><Link className="dropdown-item" to="#">Another action</Link></li>
+									<li><hr className="dropdown-divider" /></li>
+									<li><Link className="dropdown-item" to="#">Something else here</Link></li>
+								</ul>
+							</li>
 
-						<li className="nav-item">
-							<a className="nav-link disabled">Disabled</a>
-						</li>
-						<li className="ml-auto nav-item">
-							<Link class="nav-link" to="/login">Login</Link>
-						</li>
-						<li className="ml-auto nav-item">
-							<Link className="nav-link" to="/" onClick={logOut}>Logout</Link>
-						</li>
-						<li className="ml-auto nav-item">
-							<Link className="nav-link" to="/registry" >Registry</Link>
-						</li>
+						<li><Link to="#" className="nav-link px-2">Pricing</Link></li>
+						<li><Link to="#" className="nav-link px-2">FAQs</Link></li>
+						<li><Link to="#" className="nav-link px-2">About</Link></li>
+
 
 					</ul>
-					<div className="collapse navbar-collapse">
-						<ul className="navbar-nav me-auto mb-2 mb-lg-0">
-							<li><Link to='/login'>Login</Link></li>
+
+					<div className="col-md-3 text-end">
+						<ul className="nav col-12 col-md-auto mb-2 justify-content-center mb-md-0">
+							{ user.username ? 
+									<li><Link to="/" className="nav-link px-2" onClick={logOut}>Logout</Link></li>
+									:
+									<li><Link to="/login" className="nav-link px-2">Login</Link></li>}
+							<li><Link to="/registry" className="nav-link px-2">Registry</Link></li>
+							<div>USER: | {user.username}</div>
 						</ul>
 					</div>
-					<div>USER: | {user.username}</div>
-					<form className="d-flex" role="search">
-						<input className="form-control me-2" type="search" placeholder="Search" aria-label="Search" />
-						<button className="btn btn-outline-success" type="submit">Search</button>
-					</form>
-				</div>
-			</div>
-		</nav>
+				</header>
+  		</div>
+		</>
+
+
+
 	)
 }
 
