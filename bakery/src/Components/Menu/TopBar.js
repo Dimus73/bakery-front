@@ -90,7 +90,7 @@ const TopBar = () =>{
 
 
 
-		<nav className="navbar navbar-expand-lg rounded bg-white shadow fixed-top" >
+		<nav className="navbar navbar-expand-lg rounded bg-white shadow fixed-top font-comfortaa text-dark" >
       <div className="container-fluid">
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample10" aria-controls="navbarsExample10" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
@@ -112,11 +112,12 @@ const TopBar = () =>{
               <Link className="nav-link active" aria-current="page" to="#">Centered nav only</Link>
             </li>
             <li className="nav-item">
-              <Link className="nav-link" to="#">Link</Link>
+              <Link className="nav-link" to="/task/create">Task</Link>
             </li>
             <li className="nav-item">
               <Link className="nav-link disabled">Disabled</Link>
             </li>
+
 
 						<li className='nav-item dropdown'>
 								<Link className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" to="#" >
@@ -157,7 +158,7 @@ const TopBar = () =>{
 										<span className='navbar-text'>{user.username}</span>
 									</div>
 									<div className='col-1'>
-										<i className="bi bi-box-arrow-in-right navbar-text" style={{'font-size': '1.8rem', color: 'cornflowerblue'}} onClick={logOut}></i>
+										<i className="bi bi-box-arrow-in-right navbar-text" style={{'font-size': '1.8rem', color: 'black'}} onClick={logOut}></i>
 									</div>
 								</div>
 								:

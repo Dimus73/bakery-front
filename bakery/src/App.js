@@ -14,6 +14,8 @@ import Recipe           from './Components/Recipe/Recipe';
 import RecipeEdit       from './Components/Recipe/RecipeEdit';
 import RecipeDetailView from './Components/Recipe/RecipeDetailView';
 
+import CreateTask       from './Components/Task/CreateTask';
+
 import 'bootstrap/dist/css/bootstrap.min.css';
 import { Button, Container, Row, Col } from 'react-bootstrap';
 
@@ -34,6 +36,8 @@ function App() {
         <Route path='recipe/:id'            element={<RecipeEdit/>} />
         <Route path='recipe/create'         element={<Recipe/>} />
         <Route path='recipe/detail/:id'     element={<RecipeDetailView/>} />
+
+        <Route path='task/create'         element={<CreateTask/>} />
 
         <Route path='*'                     element={<PageNoFound />} />
       </Route>
