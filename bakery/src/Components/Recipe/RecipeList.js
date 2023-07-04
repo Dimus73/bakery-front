@@ -44,15 +44,6 @@ const RecipeList = () =>{
 
 	return (
 		<div>
-			<h1>Recipe list</h1>
-			<ul>
-				{recipeList.map((value) => {
-					return (<li>
-						<Link to={"/recipe/detail/"+value.id} >{value.name}</Link>
-						<button onClick={()=> navigate("/recipe/"+value.id)}>Edit1</button>
-					</li>)
-				})}
-			</ul>
 				<div className="row g-4">
 					{recipeList.map((value, i) => <RecipeCard item={value} i={i} navigate ={navigate}/>)}
 				</div>
@@ -65,7 +56,7 @@ const RecipeCard = (props) => {
 	
 	return(
 
-	<div key={props.i} key1={props.i} className="col-4" >
+	<div key={props.i} key1={props.i} className="col-12 col-md-6 col-lg-4 col-xl-3" >
     <div className="bg-white shadow shadow-lg">
 			<div className="img-cont1">
 				<div className="img-cont2">

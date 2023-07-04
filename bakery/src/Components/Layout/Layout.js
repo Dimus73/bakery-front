@@ -16,7 +16,7 @@ const Layout = () => {
 					</div>
 				</div>
 			</div>
-			<Footer />
+			<div className='pb-5'></div>
 		</div>
 	)
 }
