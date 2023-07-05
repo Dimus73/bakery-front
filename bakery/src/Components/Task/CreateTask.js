@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import { useSelector  } from 'react-redux'
-import { useNavigate  } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { emptyRecipe } from '../Recipe/EmptyRecipe';
 
 
@@ -42,6 +42,10 @@ const CreateTask = () => {
 		taskList : [{...emptyTask}]
 	});
 
+	const params = useParams();
+	// console.log('PARAMS =>', params);
+	const navigate = useNavigate();
+
 
 // ---------------------------
 // Function to read the list of available recipes
@@ -78,24 +82,64 @@ const CreateTask = () => {
 
 		const tt = async () => {
 			await getRecipeList ();
+			if ('id' in params){
+				await getTask (params.id)
+			}
 		}
 		tt ();
 
 	},[])
 
 	// ---------------------------
-	// Function for saving a new task
+	// Function for getting task in edit mode
+	// ---------------------------
+	const getTask = async (id) => {
+		const BASE_URL = process.env.REACT_APP_BASE_URL
+		const URL = BASE_URL + '/api/task/'+id
+
+		const reqData = {
+			method : 'GET',
+			headers:{
+				'Content-type' : 'application/json',
+				'Authorization' : 'Bearer ' + user.token
+			},
+		}
+
+		try {
+			const result = await fetch(URL, reqData);
+			const resultJS = await result.json();
+			if (result.ok){
+				setEditMode(EDIT_MODE.EDIT);
+				const tDate = new Date(resultJS.date)
+				resultJS.date = tDate.toISOString().split('T')[0];
+				resultJS.user_id = user.userId
+				resultJS.taskList.push ({});
+				// console.log('resultJS0', resultJS);
+				setTask ({...resultJS})
+			} else {
+				alert(`Error getting list of recipes. Status: ${result.status}. Message: ${resultJS.msg}`)
+			}
+		} catch (error) {
+			console.log(error);
+			alert (`Error getting list of recipes. Message: ${error}`)		
+		}
+
+	}
+
+
+	// ---------------------------
+	// Function for saving a new task or update task
 	// ---------------------------
 
 	const saveNewTask = async (mode) => {
 		const BASE_URL = process.env.REACT_APP_BASE_URL
 		const URL = BASE_URL + '/api/task'
 
-		console.log('No CLEANER DATA to save', task);
+		// console.log('No CLEANER DATA to save', task);
 
 		const data = clearData(task)
 
-		console.log('Client DATA to save', data, mode);
+		// console.log('Client DATA to save', data, mode);
 		if (taskDataCheck ( data )) {
 			const reqData = {
 				method : mode === EDIT_MODE.CREATE ? 'POST' : 'PUT',
@@ -109,16 +153,16 @@ const CreateTask = () => {
 			try {
 				const result = await fetch(URL, reqData);
 				const resultJS = await result.json();
-				console.log('After saving data:', resultJS);
+				// console.log('After saving data:', resultJS);
 				if (result.ok){
-					console.log('After saving data:', resultJS);
+					// console.log('After saving data:', resultJS);
 					setEditMode(EDIT_MODE.EDIT);
 	
 					const tDate = new Date(resultJS.date)
 					resultJS.date = tDate.toISOString().split('T')[0];
 					resultJS.user_id = user.userId
 					resultJS.taskList.push ({});
-					console.log('resultJS0', resultJS);
+					// console.log('resultJS0', resultJS);
 					setTask ({...resultJS})
 	
 				} else {
@@ -240,12 +284,13 @@ const CreateTask = () => {
 				</div>
 			</div>
 			
-			{editMode === EDIT_MODE.CREATE ? <button className='btn btn-primary' onClick={ () => saveNewTask (EDIT_MODE.CREATE) } >Save</button>
+			{editMode === EDIT_MODE.CREATE ? <button className='btn btn-primary m-3' onClick={ () => saveNewTask (EDIT_MODE.CREATE) } >Save</button>
 			:
-			editMode === EDIT_MODE.EDIT ? <button className='btn btn-primary' onClick={ () => saveNewTask (EDIT_MODE.EDIT) } >Update</button> 
+			editMode === EDIT_MODE.EDIT ? <button className='btn btn-primary m-3' onClick={ () => saveNewTask (EDIT_MODE.EDIT) } >Update</button> 
 			:
 			<h4>Task is in work. View mode</h4> 
 			}
+			<button className='btn btn-primary m-3' onClick={ () => navigate(`/task/list`) } >Close</button>
 		</div>
 	)
 }

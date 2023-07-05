@@ -111,9 +111,18 @@ const TopBar = () =>{
             <li className="nav-item">
               <Link className="nav-link active" aria-current="page" to="#">Centered nav only</Link>
             </li>
-            <li className="nav-item">
-              <Link className="nav-link" to="/task/create">Task</Link>
+
+
+            <li className="nav-item dropdown">
+								<Link className="nav-link dropdown-toggle" role="button" data-bs-toggle="dropdown" aria-expanded="false" to="#" >
+									Task
+								</Link>
+								<ul className="dropdown-menu">
+									<li><Link className="dropdown-item" to="/task/list" >List</Link></li>
+									<li><Link className="dropdown-item" to="/task/create" >Create</Link></li>
+								</ul>
             </li>
+
             <li className="nav-item">
               <Link className="nav-link disabled">Disabled</Link>
             </li>
