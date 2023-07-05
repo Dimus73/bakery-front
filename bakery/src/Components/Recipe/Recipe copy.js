@@ -1,7 +1,6 @@
 import './Recipe.css'
 import { useSelector } from 'react-redux'
 import {useState, useEffect} from 'react'
-import { useNavigate } from 'react-router-dom'
 import getAll from '../../Utils/getListFromBase'
 import BlockTable from './RecipeTable'
 
@@ -29,7 +28,6 @@ const Recipe = (props) => {
 	const [ingredients, setIngredients] = useState([{}]);
 	const [units, setUnits] = useState([{}]);
 	const [recipe, setRecipe] = useState( emptyRecipe )
-	const navigate = useNavigate()
 
 	// ---------------------------
 	// Get All ingredients for select tub
@@ -308,102 +306,104 @@ const Recipe = (props) => {
 
 
 	return(
-		<div className='container bg-white p-5 font-comfortaa shadow-lg'>
+		<div className='container bg-white p-5 font-comfortaa'>
+			<div className='row'>
 
 
-				<div className='row' >
-					<div className='col-12 col-lg-6'>
-						<div className='container'>
-							<div className='row'>
-								<div className='col-12 col-md-6 order-2 order-md-1'>
-									<div className='mb-3' >
-										<label className='form-label' htmlFor="recipe_name"><strong>Recipe name:</strong></label>
-										<input className='form-control ' type="text" name='recipe_name' value={recipe.name}
-											onChange={ (e) => {setRecipe ({...recipe, name:e.target.value})}} />
-									</div>
-									<div className='mb-3' >
-										<label className='form-label' htmlFor="recipe_img"><strong>Recipe img:</strong></label>
-										<input className='form-control' type="text" name='recipe_img' value={recipe.img}
-											onChange={ (e) => {setRecipe ({...recipe, img:e.target.value})}} />
-									</div>
-									{/* <div contentEditable="true"
-										onInput={ (e) => {setRecipe ({...recipe, name:e.target.innerText})} }>Test edit div</div> */}
-									<div className='mb-3' >
-										<label className='form-label' htmlFor="finish_quantity"><strong>Finish quantity:</strong></label>
-										<input  className='form-control' type="text" name='finish_quantity' value={recipe.finish_quantity}
-												onChange={ (e) => {setRecipe ({...recipe, finish_quantity:e.target.value})}} />
-									</div>
-									<div className='mb-3' >
-										<label className='form-label' htmlFor="iUnit"><strong>Unit:</strong></label>
-										<select  className='form-select' onChange={(e) => setRecipe ({...recipe, unit_id:e.target.value}) }
-												name='unit' value = {recipe.unit_id} >
-											{units.map ((item) =>
-												<option key={item.id} value={item.id}>{item.unit_name}</option>
-											)}
-										</select>
-									</div>
-									<div className='mb-3 ' >
-										<label className='form-label' htmlFor="is_semifinished"><strong>Semifinished</strong></label>
-										{recipe.semifinished ?
-										<input className='form-check-input ms-3 text-danger' type="checkbox" name="is_semifinished" checked
-											onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.checked})}/>
-										:
-										<input className='form-check-input ms-3 text-danger' type="checkbox" name="is_semifinished"
-										onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.checked})}/>
-										}
-									</div>
-								</div>
-								<div className='col-12 col-md-6 order-1 order-md-2'>
-									<div className="img-cont1">
-										<div className="img-cont2">
-											<img src= {recipe.img} className="recipe-img-card " style={{objectFit:"cover"}} alt="..." />
-											</div>
-									</div>
-								</div>
+				<div className='col-3'>
 					
-									<div className='col order-3'>
-										<label className='form-label' htmlFor="description"><strong>Description</strong></label>
-										<textarea id='ddd' className='form-control ' name="description" 
-										 cols="60" rows="9" value={recipe.description}
-											onChange={ (e) => {setRecipe ({...recipe, description:e.target.value})} }></textarea>
-								</div>
-							</div>
-						</div>
+					<div className='mb-3' >
+						<label className='form-label' htmlFor="recipe_name">Recipe name:</label>
+						<input className='form-control ' type="text" name='recipe_name' value={recipe.name}
+							onChange={ (e) => {setRecipe ({...recipe, name:e.target.value})}} />
 					</div>
 
-					<div className='col-12 col-lg-6' >
-						<div className='col'>
-							{/* ---------------------------------- */}
-							<BlockTable flag={'I'}
-									componentList={recipe.ingredients} recipe={recipe}
-									ingredients={ingredients} changeIngredient={changeIngredient}
-									changeIngredientQuantity = {changeIngredientQuantity}
-									deleteIngredient = {deleteIngredient} setRecipe={setRecipe}
-							/>
-							{/* ---------------------------------- */}
-						</div>
-						<div className='col'>
-							{/* ---------------------------------- */}
-							<BlockTable flag={'E'}
-									componentList={recipe.equipments} recipe={recipe}
-									ingredients={equipments} changeIngredient={changeIngredient}
-									changeIngredientQuantity = {changeIngredientQuantity}
-									deleteIngredient = {deleteIngredient} setRecipe={setRecipe}
-							/>
-							{/* ---------------------------------- */}
-							</div>
-							<div className='row'>
-								<div className='col-12'>
-									<div className='d-grid gap-2 d-md-flex justify-content-md-end'>
-										<button id='btn1' onClick={saveRecipe} className='btn m-1 me-md-2 btn-outline-danger'>Save as new</button>
-										<button id='btn2' onClick={updateRecipe} className='btn m-1 btn-outline-danger'>Update</button>
-										<button id='btn2' onClick={()=>navigate(-1)} className='btn m-1 btn-outline-danger'>Cancel</button>
-									</div>
-								</div>
-						</div>
+					<div className='mb-3' >
+						<label className='form-label' htmlFor="recipe_img">Recipe img:</label>
+						<input className='form-control' type="text" name='recipe_img' value={recipe.img}
+							onChange={ (e) => {setRecipe ({...recipe, img:e.target.value})}} />
+					</div>
+
+					{/* <div contentEditable="true" 
+						onInput={ (e) => {setRecipe ({...recipe, name:e.target.innerText})} }>Test edit div</div> */}
+
+					<div className='mb-3' >
+						<label className='form-label' htmlFor="finish_quantity">Finish quantity:</label>
+						<input  className='form-control' type="text" name='finish_quantity' value={recipe.finish_quantity}
+								onChange={ (e) => {setRecipe ({...recipe, finish_quantity:e.target.value})}} />
+					</div>
+
+					<div className='mb-3' >
+						<label className='form-label' htmlFor="iUnit">Unit:</label>
+						<select  className='form-select' onChange={(e) => setRecipe ({...recipe, unit_id:e.target.value}) }
+								name='unit' value = {recipe.unit_id} >
+							{units.map ((item) =>
+								<option key={item.id} value={item.id}>{item.unit_name}</option>
+							)}
+						</select>
+					</div>
+
+					<div>
+						<label className='form-label' htmlFor="is_semifinished">Semifinished</label>
+						{recipe.semifinished ?
+						<input className='form-check-input' type="checkbox" name="is_semifinished" checked
+							onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.checked})}/>
+						:
+						<input className='form-check-input' type="checkbox" name="is_semifinished"
+						onChange={ (e) => setRecipe ({...recipe, semifinished:e.target.checked})}/>
+						}
 					</div>
 				</div>
 
+
+				<div className='col-3'>
+					{/* <div>
+						<img src={recipe.img} alt="" className='img-thumbnail img-fluid'/>
+					</div> */}
+						<div className="img-cont1">
+							<div className="img-cont2">
+								<img src= {recipe.img} className="recipe-img-card " style={{objectFit:"cover"}} alt="..." />
+								</div>
+						</div>
+
+				</div>
+				<div className='col-6'>
+					<label htmlFor="description">Description</label>
+					<textarea name="description" id="" cols="60" rows="8" value={recipe.description}
+						onChange={ (e) => {setRecipe ({...recipe, description:e.target.value})} }></textarea>
+				</div>
+			</div>
+			<div className='row'> 
+				<div className='col-md-10 col-xl-6'>
+					{/* ---------------------------------- */}
+					<div>Ingredient</div>
+					<BlockTable flag={'I'}
+							componentList={recipe.ingredients} recipe={recipe} 
+							ingredients={ingredients} changeIngredient={changeIngredient}
+							changeIngredientQuantity = {changeIngredientQuantity}
+							deleteIngredient = {deleteIngredient} setRecipe={setRecipe}
+					/>
+					{/* ---------------------------------- */}
+				</div>
+
+				<div className='col-md-10 col-xl-6'>
+					{/* ---------------------------------- */}
+					<div>Equipment</div>
+					<BlockTable flag={'E'}
+							componentList={recipe.equipments} recipe={recipe} 
+							ingredients={equipments} changeIngredient={changeIngredient}
+							changeIngredientQuantity = {changeIngredientQuantity}
+							deleteIngredient = {deleteIngredient} setRecipe={setRecipe}
+					/>
+					{/* ---------------------------------- */}
+				</div>
+				<div className='row'>
+					<div className='col-6'>
+						<button onClick={saveRecipe} className='btn btn-primary m-1'>Save recipe</button>
+						<button onClick={updateRecipe} className='btn btn-primary m-1'>Update recipe</button>
+					</div>
+				</div>
+			</div>
 		</div>
 	)
 }

@@ -2,6 +2,7 @@ import { useState, useEffect } from 'react'
 import { useSelector  } from 'react-redux'
 import { useNavigate, useParams } from "react-router-dom";
 import { emptyRecipe } from '../Recipe/EmptyRecipe';
+import  ResourcesUsed  from './ResourcesUsed';
 
 
 const emptyTask = {
@@ -110,9 +111,25 @@ const CreateTask = () => {
 			const resultJS = await result.json();
 			if (result.ok){
 				setEditMode(EDIT_MODE.EDIT);
+				// console.log('DATE :', resultJS.date);
 				const tDate = new Date(resultJS.date)
-				resultJS.date = tDate.toISOString().split('T')[0];
+
+				const year = tDate.getFullYear();
+				const month = String(tDate.getMonth() + 1).padStart(2, '0');
+				const day = String(tDate.getDate()).padStart(2, '0');
+				const formattedDate = `${year}-${month}-${day}`;
+				
+				const options = {
+					year: 'numeric',
+					month: '2-digit',
+					day: '2-digit',
+					timeZone: 'Asia/Jerusalem'
+				};
+				// resultJS.date = tDate.toLocaleString('en-US', options);
+				// resultJS.date = tDate.toISOString().split('T')[0];
+				resultJS.date = formattedDate;
 				resultJS.user_id = user.userId
+				
 				resultJS.taskList.push ({});
 				// console.log('resultJS0', resultJS);
 				setTask ({...resultJS})
@@ -182,11 +199,11 @@ const CreateTask = () => {
 	// Clearing data before sending it to the server
 	// ---------------------------
 	const clearData = (task) => {
-		console.log('TASK', task);
+		// console.log('TASK', task);
 		const data = {...task};
 		console.log('DATA', data);
 		const temp = data.taskList.filter((value) => 'id' in value)
-		console.log('TEMP', temp, data.taskList);
+		// console.log('TEMP', temp, data.taskList);
 		data.taskList = data.taskList.filter((value) => 'id' in value)
 
 		return data
@@ -281,6 +298,9 @@ const CreateTask = () => {
 							</div>
 						</div>
 					</div>
+				</div>
+				<div className='col-6'>
+					{ !(editMode === EDIT_MODE.CREATE) ? <ResourcesUsed id={task.id}/> : '' }
 				</div>
 			</div>
 			

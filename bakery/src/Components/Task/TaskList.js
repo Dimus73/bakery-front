@@ -55,7 +55,7 @@ const TaskList = () => {
 		<div className='container'>
 			<h1>Task list</h1>
 			<div className='row'>
-				<div className='col-4'>
+				<div className='col-6'>
 					<table>
 						<thead>
 							<tr>
@@ -71,7 +71,7 @@ const TaskList = () => {
 					</table>
 				</div>
 
-				<div className='col-8'>
+				<div className='col-6'>
 					<ResourcesUsed id={activeTask} />
 				</div>
 

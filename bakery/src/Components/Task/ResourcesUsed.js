@@ -9,7 +9,7 @@ const ResourcesUsed = (props) => {
 		}
 		);
 	const user = useSelector ((state) => state.user);
-	console.log('Resource props.id=>', props.id);
+	// console.log('Resource props.id=>', props.id);
 	const id = props.id;
 	// const id=93;
 
