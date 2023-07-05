@@ -25,21 +25,26 @@ const Login = () => {
 				},
 				body:JSON.stringify({
 					username,
-					password
+					password,
 				})
 			}
 			console.log(reqData);
 
 			const data = await fetch(URL, reqData); 
 			const result = await data.json()
-
-			localStorage.setItem( 'user', JSON.stringify (result) );
-			dispatch(setUser(result));
-			console.log('In login function', result);
-			navigate( '/' );
+			if (data.ok) {
+				localStorage.setItem( 'user', JSON.stringify (result) );
+				dispatch(setUser(result));
+				console.log('In login function', result);
+				navigate( '/' );
+			} else {
+				console.log(`Problems occurred during user login. Message: ${result.message}`);
+				alert(`Problems occurred during user login. Message: ${result.message}`);
+			}
 
 		} catch (error) {
 			console.log('No log in', error);
+			alert(`Problems occurred during user login. Message: ${error.message}`);
 		}
 
 	}

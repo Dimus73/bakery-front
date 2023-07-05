@@ -87,7 +87,7 @@ const CreateTask = () => {
 	// Function for saving a new task
 	// ---------------------------
 
-	const saveNewTask = async () => {
+	const saveNewTask = async (mode) => {
 		const BASE_URL = process.env.REACT_APP_BASE_URL
 		const URL = BASE_URL + '/api/task'
 
@@ -95,10 +95,10 @@ const CreateTask = () => {
 
 		const data = clearData(task)
 
-		console.log('Client DATA to save', data);
+		console.log('Client DATA to save', data, mode);
 		if (taskDataCheck ( data )) {
 			const reqData = {
-				method : 'POST',
+				method : mode === EDIT_MODE.CREATE ? 'POST' : 'PUT',
 				headers:{
 					'Content-type' : 'application/json',
 					'Authorization' : 'Bearer ' + user.token
@@ -240,9 +240,9 @@ const CreateTask = () => {
 				</div>
 			</div>
 			
-			{editMode === EDIT_MODE.CREATE ? <button className='btn btn-primary' onClick={saveNewTask} >Save</button>
+			{editMode === EDIT_MODE.CREATE ? <button className='btn btn-primary' onClick={ () => saveNewTask (EDIT_MODE.CREATE) } >Save</button>
 			:
-			editMode === EDIT_MODE.EDIT ? <button className='btn btn-primary' onClick={saveNewTask} >Update</button> 
+			editMode === EDIT_MODE.EDIT ? <button className='btn btn-primary' onClick={ () => saveNewTask (EDIT_MODE.EDIT) } >Update</button> 
 			:
 			<h4>Task is in work. View mode</h4> 
 			}
