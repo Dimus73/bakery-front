@@ -24,20 +24,23 @@ const EDIT_MODE ={
 
 const CreateTask = () => {
 
-	const [task, setTask] = useState({
-		id : 0,
-		date : new Date(),
-		inWork : false,
-		isReady : false
-	});
-
-	const [taskList, setTaskList] = useState( [ {...emptyTask} ] );
+	// const [taskList, setTaskList] = useState( [ {...emptyTask} ] );
 
 	const [recipeList, setRecipeList] = useState([{}]);
 
 	const [editMode, setEditMode] = useState (EDIT_MODE.CREATE)
 
 	const user = useSelector ( (state) =>(state.user) )
+	const tDate = new Date()
+	
+	const [task, setTask] = useState({
+		id : 0,
+		date : tDate.toISOString().split('T')[0],
+		inWork : false,
+		isReady : false,
+		user_id : user.userId,
+		taskList : [{...emptyTask}]
+	});
 
 
 // ---------------------------
@@ -59,7 +62,7 @@ const CreateTask = () => {
 		try {
 			const data = await fetch(URL, reqData);
 			const dataJS = await data.json();
-			console.log(data, dataJS);
+			// console.log(data, dataJS);
 			if (data.ok) {
 				setRecipeList (dataJS);
 			} else {
@@ -81,23 +84,107 @@ const CreateTask = () => {
 	},[])
 
 	// ---------------------------
+	// Function for saving a new task
+	// ---------------------------
+
+	const saveNewTask = async () => {
+		const BASE_URL = process.env.REACT_APP_BASE_URL
+		const URL = BASE_URL + '/api/task'
+
+		console.log('No CLEANER DATA to save', task);
+
+		const data = clearData(task)
+
+		console.log('Client DATA to save', data);
+		if (taskDataCheck ( data )) {
+			const reqData = {
+				method : 'POST',
+				headers:{
+					'Content-type' : 'application/json',
+					'Authorization' : 'Bearer ' + user.token
+				},
+				body : JSON.stringify(data),
+			}
+	
+			try {
+				const result = await fetch(URL, reqData);
+				const resultJS = await result.json();
+				console.log('After saving data:', resultJS);
+				if (result.ok){
+					console.log('After saving data:', resultJS);
+					setEditMode(EDIT_MODE.EDIT);
+	
+					const tDate = new Date(resultJS.date)
+					resultJS.date = tDate.toISOString().split('T')[0];
+					resultJS.user_id = user.userId
+					resultJS.taskList.push ({});
+					console.log('resultJS0', resultJS);
+					setTask ({...resultJS})
+	
+				} else {
+					alert(`Error getting list of recipes. Status: ${result.status}. Message: ${resultJS.msg}`)
+				}
+	
+			} catch (error) {
+				console.log(error);
+				alert (`Error getting list of recipes. Message: ${error}`)		
+			}
+	
+		}
+
+	}
+
+	// ---------------------------
+	// Clearing data before sending it to the server
+	// ---------------------------
+	const clearData = (task) => {
+		console.log('TASK', task);
+		const data = {...task};
+		console.log('DATA', data);
+		const temp = data.taskList.filter((value) => 'id' in value)
+		console.log('TEMP', temp, data.taskList);
+		data.taskList = data.taskList.filter((value) => 'id' in value)
+
+		return data
+
+	}
+
+	// ---------------------------
+	// Control data before sending it to the server
+	// ---------------------------
+	const taskDataCheck = (data) => {
+		if ( data.taskList.length === 0 ) {
+			alert ('The task must contain at least one recipe')
+			return false;
+		}
+		if (data.taskList.some((value) =>  isNaN(value.quantity) || Number(value.quantity) <=0 )){
+			alert ('In the quantity field must be a number greater than zero')
+			return false;
+		}
+		return true;
+	}
+
+
+
+	// ---------------------------
 	// Callback function  called when a recipe is selected
 	// ---------------------------
 	const choseRecipe = (e, i) => {
 		const currentId = e.target.value;
 		const currentRecipe = recipeList.filter ((value => value.id === Number(currentId)))
 
-		taskList[i].recipeId = currentId;
-		taskList[i].recipeName = currentRecipe[0].name;
-		taskList[i].unit_name = currentRecipe[0].unit_name; 	
-		taskList[i].quantityInRecipe = currentRecipe[0].finish_quantity	
-		if (!('id' in taskList[i])){
-			taskList[i].id=0;
+		task.taskList[i].recipeId = currentId;
+		task.taskList[i].recipeName = currentRecipe[0].name;
+		task.taskList[i].unit_name = currentRecipe[0].unit_name; 	
+		task.taskList[i].quantityInRecipe = currentRecipe[0].finish_quantity	
+		if (!('id' in task.taskList[i])){
+			task.taskList[i].id=0;
 		}
-		if ( taskList.every (value => ('id' in value) ) ){
-			taskList.push({...emptyTask});
+		if ( task.taskList.every (value => ('id' in value) ) ){
+			task.taskList.push({...emptyTask});
 		}
-		setTaskList([...taskList])
+		// console.log('On change', task);
+		setTask({...task})
 	}
 
 	// ---------------------------
@@ -106,13 +193,15 @@ const CreateTask = () => {
 	const changeQuantity = (e, i) =>{
 		const currentQuantity = e.target.value;
 		if ( !isNaN(currentQuantity) ){
-			taskList[i].quantity = currentQuantity;
-			taskList[i].totalQuantity = Number ( currentQuantity ) * Number ( taskList[i].quantityInRecipe )
-			setTaskList([...taskList]); 
+			task.taskList[i].quantity = currentQuantity;
+			task.taskList[i].totalQuantity = Number ( currentQuantity ) * Number ( task.taskList[i].quantityInRecipe )
+			setTask({...task}); 
 		}
 
 
 	}
+
+	// console.log('Before return', user, task);
 
 	return (
 		<div className="container">
@@ -123,7 +212,8 @@ const CreateTask = () => {
 			<h1>VIEW daily task</h1> 
 			}
 			<label htmlFor="taskDate">Choice the day</label>
-			<input type="date" name='taskDate' value={task.date.toISOString().split('T')[0]} />
+			<input type="date" name='taskDate' value={task.date} 
+				onChange={(e)=> setTask({...task, date:e.target.value})}/>
 			<div className='row'>
 				<div className='col-6'>
 					<div className='container'>
@@ -141,7 +231,7 @@ const CreateTask = () => {
 										</tr>
 									</thead>
 									<tbody>
-											{taskList.map ((value,i) => <TaskRow item={value} recipeList = {recipeList} i={i} choseRecipe={choseRecipe} changeQuantity={changeQuantity} />) }
+											{task.taskList.map ((value,i) => <TaskRow item={value} recipeList = {recipeList} i={i} choseRecipe={choseRecipe} changeQuantity={changeQuantity} />) }
 									</tbody>
 								</table>
 							</div>
@@ -149,6 +239,13 @@ const CreateTask = () => {
 					</div>
 				</div>
 			</div>
+			
+			{editMode === EDIT_MODE.CREATE ? <button className='btn btn-primary' onClick={saveNewTask} >Save</button>
+			:
+			editMode === EDIT_MODE.EDIT ? <button className='btn btn-primary' onClick={saveNewTask} >Update</button> 
+			:
+			<h4>Task is in work. View mode</h4> 
+			}
 		</div>
 	)
 }

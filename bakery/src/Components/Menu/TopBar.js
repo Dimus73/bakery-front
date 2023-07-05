@@ -90,7 +90,7 @@ const TopBar = () =>{
 
 
 
-		<nav className="navbar navbar-expand-lg rounded bg-white shadow fixed-top font-comfortaa text-dark" >
+		<nav className="navbar navbar-expand-lg rounded bg-white shadow fixed-top font-comfortaa text-dark pt-3 pb-3" >
       <div className="container-fluid">
         <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample10" aria-controls="navbarsExample10" aria-expanded="false" aria-label="Toggle navigation">
           <span className="navbar-toggler-icon"></span>
