@@ -414,6 +414,7 @@ export default Recipe
 // https://sun9-41.userapi.com/MI4rjKbAP9M05tzE4GXjGLq9d0wd2_agznLc2w/1pbkJLtMnbU.jpg
 // http://klublady.ru/uploads/posts/2022-02/1645019230_14-klublady-ru-p-tort-zakher-foto-15.jpg
 // https://balthazar.club/uploads/posts/2022-03/thumbs/1646148994_30-balthazar-club-p-morozhenoe-ptiche-moloko-31.jpg
+// http://klublady.ru/uploads/posts/2022-02/1644780637_30-klublady-ru-p-anna-pavlovna-pirozhnoe-foto-30.jpg
 // Lorem ipsum dolor, sit amet consectetur adipisicing elit. Eos quos in fugiat, voluptas tempore, maiores libero doloribus ad minima quaerat tenetur excepturi blanditiis hic odio esse a mollitia necessitatibus quo.
 
 // {

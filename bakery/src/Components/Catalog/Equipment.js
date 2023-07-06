@@ -4,7 +4,8 @@ import { FieldCheck } from '../../Utils/Fieldcheck';
 import './Ingredients.css';
 import { Button, Modal } from 'react-bootstrap'
 
-const URL = 'http://127.0.0.1:3040/api/catalog/';
+const BASE_URL = process.env.REACT_APP_BASE_URL;
+const URL = BASE_URL + '/api/catalog/';
 const URL_Equipment = 'equipment';
 
 
