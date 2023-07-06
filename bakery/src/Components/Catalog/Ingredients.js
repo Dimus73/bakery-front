@@ -201,21 +201,29 @@ const nameUpdateValidation = (id, name) => {
 	return (
 	<div className='container'>
 		<h3 className=''>Catalog | Ingredients</h3	>
-		<div className='container '>
-			<div className='row justify-content-md-center'>
-				<div className='col-6'>
+		<div className='container bg-white p-5'>
+			<div className='row font-comfortaa'>
+				<div className='col-4'>
 					<form action="">
-						<input type="text" value={searchStr} onChange={(e) => setSearchStr(e.target.value)} placeholder='Enter to filter'/>
-						<button onClick={(e) => { e.preventDefault(); setSearchStr('') }} >Clear</button>
-						<button onClick={handleShowModal}>modal</button>
+						<div className='row align-items-center'>
+							<div className='col-10'>
+								<input className='form-control' type="text" value={searchStr} onChange={(e) => setSearchStr(e.target.value)} placeholder='Enter to filter'/>
+							</div>
+							{/* <button onClick={(e) => { e.preventDefault(); setSearchStr('') }} >Clear</button> */}
+							{/* <button onClick={handleShowModal}>modal</button> */}
+							<div className='col-2'>
+								<i className="bi bi-x-square" style={{'font-size': '1.8rem', color: "#BD302D"}} onClick={(e) => { setSearchStr('') } }
+									></i>
+							</div>
+						</div>
 					</form>
 				</div>
 			</div>
 			<div className='row justify-content-md-center'>
 				<div className=' col-8 mt-3 p-3' >
 					<div className='scroll_div'>
-						<table className='table table-primary'>
-							<thead>
+						<table className='table'>
+							<thead className='font-comfortaa'>
 								<tr>
 									<td>Name</td>
 									<td>Unit</td>
@@ -224,7 +232,7 @@ const nameUpdateValidation = (id, name) => {
 									<td></td>
 								</tr>
 							</thead>
-							<tbody>
+							<tbody className='font-roboto'>
 								{ingredientsFiltered.map((value,i) => <GetIngredient item={value} editButton = {pushEditButton} i={i} updateIngredient = {updateIngredient}/>)}
 							</tbody>
 						</table>
@@ -287,19 +295,29 @@ const AddForm = (props) => {
 		
 	return (
 		<>
-			<div>Add new ingredient:</div>
-			<form onSubmit={props.addIngredients} action="">
-				<label htmlFor="iName">Ingredient:</label>
-				<input onChange={(e) => setCurrentItem ({...currentItem, name:e.target.value}) }
-							type="text" name='iName'  value = {currentItem.name}/>
-				<label htmlFor="iUnit">Unit:</label>
-				<select onChange={(e) => setCurrentItem ({...currentItem, unit_id:e.target.value}) }
-							name='iUnit' value = {currentItem.unit_id} >
-					{props.units.map ((item) =>
-						<option key={item.id} value={item.id}>{item.unit_name}</option>
-					)}
-				</select>
-				<button type='submit'>Add</button>
+			<div className='row'>
+				<div className='font-comfortaa'>new</div>
+			</div>
+			<form className='font-comfortaa' onSubmit={props.addIngredients} action="">
+				<div className='row justify-content-md-center'>
+					<div className='col-7'>
+						{/* <label className='form-label' htmlFor="iName">Ingredient:</label> */}
+						<input className='form-control' onChange={(e) => setCurrentItem ({...currentItem, name:e.target.value}) }
+									type="text" name='iName'  value = {currentItem.name} placeholder="enter ingredient"/>
+					</div>
+					<div className='col-3'>
+						{/* <label className='form-label' htmlFor="iUnit">Unit:</label> */}
+						<select className='form-select' onChange={(e) => setCurrentItem ({...currentItem, unit_id:e.target.value}) }
+									name='iUnit' value = {currentItem.unit_id} >
+							{props.units.map ((item) =>
+								<option key={item.id} value={item.id}>{item.unit_name}</option>
+							)}
+						</select>
+					</div>
+					<div className='col-2'>
+						<button id='btn1'  className='btn m-1 me-md-2 btn-outline-danger' type='submit'>Add</button>
+					</div>
+				</div>
 			</form>
 		</>
 	)
