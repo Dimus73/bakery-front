@@ -36,3 +36,12 @@
     transform: rotate(360deg);
   }
 }
+
+.font-comfortaa {
+	font-family: 'Comfortaa', cursive;
+}
+
+.font-roboto {
+	font-family: 'Roboto', cursive;
+}
+
